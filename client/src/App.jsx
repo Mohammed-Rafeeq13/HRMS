@@ -6,6 +6,7 @@ import CreatePost from "./components/CreatePost";
 import Posts from "./components/Posts";
 import Recognition from "./components/Recognition";
 import Events from "./components/Events";
+import NewsFeed from "./components/NewsFeed";
 import "./App.css";
 
 function App() {
@@ -15,6 +16,8 @@ function App() {
     switch (activeComponent) {
       case "dashboard":
         return <Dashboard />;
+      case "newsfeed":
+        return <NewsFeed />;
       case "chat":
         return <Chat />;
       case "create-post":
