@@ -4,7 +4,12 @@ const Sidebar = ({ activeComponent, setActiveComponent }) => {
   const [hoveredItem, setHoveredItem] = useState(null);
   const [logoHovered, setLogoHovered] = useState(false);
 
-  const menuItems = [
+  const menuItems = [ 
+     {
+      id: "newsfeed",
+      name: "NewsFeed",
+      icon: "📰",
+    },
     {
       id: "dashboard",
       name: "Dashboard",
