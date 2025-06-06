@@ -1,32 +1,5 @@
 import React, { useEffect, useState } from "react";
 
-const samplePosts = [
-  {
-    id: 1,
-    name: "John Davis",
-    position: "HR Specialist",
-    content:
-      "Just published our new remote work policy guidelines. What's your company's approach to hybrid work models? #HRManagement #FutureOfWork",
-    image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d",
-    views: 734,
-    likes: 80,
-    comments: [],
-    shares: 12,
-  },
-  {
-    id: 2,
-    name: "Emily Chen",
-    position: "HR Director",
-    content:
-      "Excited to announce our new employee wellness program launching next month! Here's what we're implementing.",
-    image: "https://images.unsplash.com/photo-1595152772835-219674b2a8a6",
-    views: 567,
-    likes: 160,
-    comments: [],
-    shares: 8,
-  },
-];
-
 const CURRENT_USER = {
   name: "John Doe",
   position: "HR Consultant",
@@ -40,54 +13,71 @@ const Posts = () => {
   const [sharedLinks, setSharedLinks] = useState({});
   const [savedPosts, setSavedPosts] = useState({});
 
-  // Load posts and savedPosts from localStorage (single user)
-  useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("johnDoePosts")) || {};
-    setPosts(stored.posts?.length ? stored.posts : samplePosts);
-    setSavedPosts(stored.savedPosts || {});
-  }, []);
-
-  // Save posts and savedPosts to localStorage (single user)
-  const saveToLocalStorage = (newPosts, newSavedPosts = savedPosts) => {
-    localStorage.setItem(
-      "johnDoePosts",
-      JSON.stringify({ posts: newPosts, savedPosts: newSavedPosts })
-    );
+  // Fetch posts from backend
+  const fetchPosts = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/posts");
+      if (!res.ok) throw new Error("Failed to fetch posts");
+      const data = await res.json();
+      setPosts(data);
+      // Set saved posts
+      const saved = {};
+      data.forEach((p) => {
+        if (p.saved) saved[p._id] = true;
+      });
+      setSavedPosts(saved);
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
-  const handleLike = (id) => {
-    const newPosts = posts.map((p) =>
-      p.id === id
-        ? { ...p, likes: p.liked ? p.likes - 1 : p.likes + 1, liked: !p.liked }
-        : p
-    );
-    setPosts(newPosts);
-    saveToLocalStorage(newPosts);
+  useEffect(() => {
+    fetchPosts();
+
+    // Listen for post created event to refresh
+    const handler = () => fetchPosts();
+    window.addEventListener("postCreated", handler);
+    return () => window.removeEventListener("postCreated", handler);
+  }, []);
+
+  const handleLike = async (id) => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/posts/${id}/like`, {
+        method: "PATCH",
+      });
+      if (!res.ok) throw new Error("Failed to update like");
+      const updatedPost = await res.json();
+      setPosts((prev) =>
+        prev.map((p) => (p._id === id ? updatedPost : p))
+      );
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
   const toggleComments = (id) => {
-    setExpandedComments((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
+    setExpandedComments((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  const handleAddComment = (id) => {
+  const handleAddComment = async (id) => {
     const commentText = commentInputs[id]?.trim();
     if (!commentText) return;
 
-    const newComment = {
-      name: CURRENT_USER.name,
-      text: commentText,
-    };
-
-    const newPosts = posts.map((p) =>
-      p.id === id ? { ...p, comments: [...p.comments, newComment] } : p
-    );
-
-    setPosts(newPosts);
-    setCommentInputs((prev) => ({ ...prev, [id]: "" }));
-    saveToLocalStorage(newPosts);
+    try {
+      const res = await fetch(`http://localhost:5000/api/posts/${id}/comment`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: CURRENT_USER.name, text: commentText }),
+      });
+      if (!res.ok) throw new Error("Failed to add comment");
+      const updatedPost = await res.json();
+      setPosts((prev) =>
+        prev.map((p) => (p._id === id ? updatedPost : p))
+      );
+      setCommentInputs((prev) => ({ ...prev, [id]: "" }));
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
   const handleShare = (id) => {
@@ -97,17 +87,29 @@ const Posts = () => {
     alert("Post link copied to clipboard!");
   };
 
-  const toggleSave = (id) => {
-    const newSaved = { ...savedPosts, [id]: !savedPosts[id] };
-    setSavedPosts(newSaved);
-    saveToLocalStorage(posts, newSaved);
+  const toggleSave = async (id) => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/posts/${id}/save`, {
+        method: "PATCH",
+      });
+      if (!res.ok) throw new Error("Failed to toggle save");
+      const updatedPost = await res.json();
+      setPosts((prev) =>
+        prev.map((p) => (p._id === id ? updatedPost : p))
+      );
+
+      setSavedPosts((prev) => ({
+        ...prev,
+        [id]: updatedPost.saved,
+      }));
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
   return (
     <div className="bg-gray-100 min-h-screen py-6">
-      {/* Centered max-width container with horizontal padding */}
       <div className="max-w-5xl mx-auto px-6 flex flex-col lg:flex-row gap-6">
-        {/* Posts Feed */}
         <div className="lg:w-3/4 w-full space-y-6">
           <div className="bg-white p-4 rounded shadow flex justify-between items-center">
             <div>
@@ -119,7 +121,10 @@ const Posts = () => {
           </div>
 
           {posts.map((post) => (
-            <div key={post.id} className="bg-white p-5 shadow rounded space-y-3">
+            <div
+              key={post._id}
+              className="bg-white p-5 shadow rounded space-y-3"
+            >
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <img
@@ -133,10 +138,10 @@ const Posts = () => {
                   </div>
                 </div>
                 <button
-                  onClick={() => toggleSave(post.id)}
+                  onClick={() => toggleSave(post._id)}
                   className="text-sm text-gray-600 hover:text-blue-600 transition"
                 >
-                  {savedPosts[post.id] ? "💾 Saved" : "💾 Save"}
+                  {savedPosts[post._id] ? "💾 Saved" : "💾 Save"}
                 </button>
               </div>
 
@@ -156,7 +161,7 @@ const Posts = () => {
 
               <div className="flex justify-between text-sm text-gray-600">
                 <button
-                  onClick={() => handleLike(post.id)}
+                  onClick={() => handleLike(post._id)}
                   className={`transition ${
                     post.liked ? "text-blue-600 font-semibold" : "hover:text-blue-600"
                   }`}
@@ -164,20 +169,20 @@ const Posts = () => {
                   👍 Like ({post.likes})
                 </button>
                 <button
-                  onClick={() => toggleComments(post.id)}
+                  onClick={() => toggleComments(post._id)}
                   className="hover:text-blue-600 transition"
                 >
                   💬 Comment ({post.comments.length})
                 </button>
                 <button
-                  onClick={() => handleShare(post.id)}
+                  onClick={() => handleShare(post._id)}
                   className="hover:text-blue-600 transition"
                 >
                   🔗 Share
                 </button>
               </div>
 
-              {expandedComments[post.id] && (
+              {expandedComments[post._id] && (
                 <div className="mt-3 space-y-2">
                   {post.comments.map((comment, idx) => (
                     <div
@@ -193,16 +198,16 @@ const Posts = () => {
                       type="text"
                       placeholder="Write a comment..."
                       className="w-full border border-gray-300 rounded p-2 text-sm"
-                      value={commentInputs[post.id] || ""}
+                      value={commentInputs[post._id] || ""}
                       onChange={(e) =>
                         setCommentInputs((prev) => ({
                           ...prev,
-                          [post.id]: e.target.value,
+                          [post._id]: e.target.value,
                         }))
                       }
                     />
                     <button
-                      onClick={() => handleAddComment(post.id)}
+                      onClick={() => handleAddComment(post._id)}
                       className="bg-blue-500 text-white px-4 py-2 rounded text-sm"
                     >
                       Post
@@ -211,9 +216,9 @@ const Posts = () => {
                 </div>
               )}
 
-              {sharedLinks[post.id] && (
+              {sharedLinks[post._id] && (
                 <div className="text-xs text-gray-400 mt-2">
-                  Link copied: <code>{sharedLinks[post.id]}</code>
+                  Link copied: <code>{sharedLinks[post._id]}</code>
                 </div>
               )}
             </div>
