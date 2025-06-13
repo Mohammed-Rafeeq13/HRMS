@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
+
 const CreatePost = () => {
   const [posts, setPosts] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -12,14 +14,13 @@ const CreatePost = () => {
 
   const users = ["@alice", "@bob", "@carol", "@dave"]; // Mentionable users
   const emojiList = [
-  "😀", "😁", "😂", "🤣", "😊", "😉", "😍", "🥰", "😘", "😋", "🤪", "😎", "😭", "😤", "😡", "🤯", "🥳", "😅", "🤔",
-  "❤", "💕", "💖", "💗", "💘", "💝", "💞", "💟", "❣",
-  "👍", "👎", "👏", "🙌", "🙏", "🤝", "👋", "🤞", "✌", "👊",
-  "🎉", "🎊", "🎈", "🥂", "🍾", "✨", "🔥", "🚀",
-  "💻", "📱", "🖥", "📸", "🎥", "🎤", "📊", "📈", "📚", "🧠", "💡",
-  "🌈", "🌤", "❄", "🌙", "⭐", "🌻", "🌺"
-];
-
+    "😀", "😁", "😂", "🤣", "😊", "😉", "😍", "🥰", "😘", "😋", "🤪", "😎", "😭", "😤", "😡", "🤯", "🥳", "😅", "🤔",
+    "❤", "💕", "💖", "💗", "💘", "💝", "💞", "💟", "❣",
+    "👍", "👎", "👏", "🙌", "🙏", "🤝", "👋", "🤞", "✌", "👊",
+    "🎉", "🎊", "🎈", "🥂", "🍾", "✨", "🔥", "🚀",
+    "💻", "📱", "🖥", "📸", "🎥", "🎤", "📊", "📈", "📚", "🧠", "💡",
+    "🌈", "🌤", "❄", "🌙", "⭐", "🌻", "🌺"
+  ];
 
   const descriptionRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -32,19 +33,30 @@ const CreatePost = () => {
     mediaType: "",
   });
 
+  // Fetch posts from backend on mount
   useEffect(() => {
-    const savedPosts = JSON.parse(localStorage.getItem("posts")) || [];
-    setPosts(savedPosts);
+    // UPDATED: Changed endpoint from /api/events to /api/createposts
+    axios
+      .get("http://localhost:4000/api/createposts")
+      .then((res) => {
+        setPosts(res.data);
+      })
+      .catch((err) => {
+        console.error("❌ Error fetching posts:", err);
+      });
   }, []);
-
-  const savePosts = (posts) => {
-    const safePosts = posts.map(({ mediaFile, ...rest }) => rest);
-    localStorage.setItem("posts", JSON.stringify(safePosts));
-  };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (!file) return;
+    if (!file) {
+      setNewPost((prev) => ({
+        ...prev,
+        mediaFile: null,
+        mediaURL: "",
+        mediaType: "",
+      }));
+      return;
+    }
 
     const fileType = file.type.startsWith("video") ? "video" : "image";
     const previewURL = URL.createObjectURL(file);
@@ -69,56 +81,94 @@ const CreatePost = () => {
     setModalOpen(true);
   };
 
-  const handleCreateOrEditPost = (e) => {
-    e.preventDefault();
-    if (!newPost.title || !newPost.description) {
-      alert("Title and description are required.");
-      return;
-    }
-
-    if (editingPostId) {
-      const updatedPosts = posts.map((post) =>
-        post.id === editingPostId
-          ? {
-              ...post,
-              title: newPost.title,
-              description: newPost.description,
-              mediaURL: newPost.mediaURL,
-              mediaType: newPost.mediaType,
-            }
-          : post
-      );
-      setPosts(updatedPosts);
-      savePosts(updatedPosts);
-      setEditingPostId(null);
-    } else {
-      const postToAdd = {
-        id: Date.now(),
-        title: newPost.title,
-        description: newPost.description,
-        mediaURL: newPost.mediaURL,
-        mediaType: newPost.mediaType,
-      };
-      const updatedPosts = [postToAdd, ...posts];
-      setPosts(updatedPosts);
-      savePosts(updatedPosts);
-    }
-
-    setNewPost({
+  // NEW FUNCTION: To open the modal for creating a new post
+  const openCreatePostModal = () => {
+    setEditingPostId(null); // Ensure we are creating, not editing
+    setNewPost({ // Reset the form fields
       title: "",
       description: "",
       mediaFile: null,
       mediaURL: "",
       mediaType: "",
     });
-    setModalOpen(false);
+    setMentionSuggestions([]);
+    setEmojiPickerOpen(false);
+    setModalOpen(true); // Open the modal
   };
 
+
+  const handleCreateOrEditPost = async (e) => {
+    e.preventDefault();
+
+    if (!newPost.title || !newPost.description) {
+      alert("Title and description are required.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("title", newPost.title);
+    formData.append("description", newPost.description);
+
+    if (newPost.mediaFile) {
+      formData.append("media", newPost.mediaFile);
+    } else {
+      formData.append("mediaURL", newPost.mediaURL || '');
+      formData.append("mediaType", newPost.mediaType || '');
+    }
+
+    try {
+      let res;
+      if (editingPostId) {
+        // UPDATED: Changed endpoint from /api/events to /api/createposts
+        res = await axios.put(`http://localhost:4000/api/createposts/${editingPostId}`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        const updatedPosts = posts.map((post) =>
+          post.id === editingPostId ? res.data : post
+        );
+        setPosts(updatedPosts);
+        setEditingPostId(null);
+        setModalOpen(false);
+        if (newPost.mediaFile && newPost.mediaURL) {
+          URL.revokeObjectURL(newPost.mediaURL);
+        }
+      } else {
+        // UPDATED: Changed endpoint from /api/events to /api/createposts
+        res = await axios.post("http://localhost:4000/api/createposts", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        setPosts([res.data, ...posts]);
+        setModalOpen(false);
+        if (newPost.mediaFile && newPost.mediaURL) {
+          URL.revokeObjectURL(newPost.mediaURL);
+        }
+      }
+      setNewPost({
+        title: "",
+        description: "",
+        mediaFile: null,
+        mediaURL: "",
+        mediaType: "",
+      });
+    } catch (err) {
+      console.error("❌ Error handling post:", err);
+      alert(`Failed to ${editingPostId ? "update" : "create"} post.`);
+    }
+  };
+
+
   const handleDelete = () => {
-    const updatedPosts = posts.filter((post) => post.id !== confirmDeleteId);
-    setPosts(updatedPosts);
-    savePosts(updatedPosts);
-    setConfirmDeleteId(null);
+    // UPDATED: Changed endpoint from /api/events to /api/createposts
+    axios
+      .delete(`http://localhost:4000/api/createposts/${confirmDeleteId}`)
+      .then(() => {
+        setPosts(posts.filter((post) => post.id !== confirmDeleteId));
+        setConfirmDeleteId(null);
+      })
+      .catch((err) => {
+        console.error("❌ Error deleting post:", err);
+        alert("Failed to delete post.");
+      });
   };
 
   const filteredPosts = posts.filter((post) =>
@@ -152,7 +202,7 @@ const CreatePost = () => {
 
   const handleSuggestionClick = (mention) => {
     const parts = newPost.description.split(" ");
-    parts.pop(); // remove current @keyword
+    parts.pop();
     const updatedText = [...parts, mention].join(" ") + " ";
     setNewPost((prev) => ({
       ...prev,
@@ -161,23 +211,31 @@ const CreatePost = () => {
     setMentionSuggestions([]);
   };
 
+  const closeModalAndReset = () => {
+    setModalOpen(false);
+    setEditingPostId(null);
+    if (newPost.mediaFile && newPost.mediaURL) {
+      URL.revokeObjectURL(newPost.mediaURL);
+    }
+    setNewPost({
+      title: "",
+      description: "",
+      mediaFile: null,
+      mediaURL: "",
+      mediaType: "",
+    });
+    setMentionSuggestions([]);
+    setEmojiPickerOpen(false);
+  };
+
+
   return (
     <div className="p-6 max-w-5xl mx-auto min-h-screen flex flex-col">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
         <button
           className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white px-6 py-3 rounded-lg shadow-lg hover:scale-105 transition duration-300"
-          onClick={() => {
-            setNewPost({
-              title: "",
-              description: "",
-              mediaFile: null,
-              mediaURL: "",
-              mediaType: "",
-            });
-            setEditingPostId(null);
-            setModalOpen(true);
-          }}
+          onClick={openCreatePostModal} // Corrected handler
         >
           + Create a Post
         </button>
@@ -202,7 +260,7 @@ const CreatePost = () => {
           {filteredPosts.map((post) => (
             <div
               key={post.id}
-              className="bg-white p-5 rounded-xl shadow hover:shadow-lg transition"
+              className="bg-white p-5 rounded-xl shadow hover:shadow-lg transition cursor-pointer"
               onClick={() => {
                 setSelectedPost(post);
                 setDetailModalOpen(true);
@@ -211,11 +269,12 @@ const CreatePost = () => {
               <h4 className="font-bold text-xl text-gray-900 mb-2">{post.title}</h4>
               <p className="text-gray-700">{post.description}</p>
               {post.mediaURL && post.mediaType === "image" && (
-                <img src={post.mediaURL} className="mt-4 rounded max-h-64 object-cover" />
+                <img src={post.mediaURL} className="mt-4 rounded max-h-64 object-cover w-full" alt="media" />
               )}
               {post.mediaURL && post.mediaType === "video" && (
                 <video controls className="mt-4 rounded max-h-72 w-full">
                   <source src={post.mediaURL} type="video/mp4" />
+                  Your browser does not support the video tag.
                 </video>
               )}
               <div className="mt-4 flex gap-3 justify-end">
@@ -248,7 +307,7 @@ const CreatePost = () => {
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 p-4">
           <div
             className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-lg space-y-4"
-            style={{ maxHeight: "80vh", overflowY: "auto" }} // Added scrollbar styles
+            style={{ maxHeight: "80vh", overflowY: "auto" }}
           >
             <h2 className="text-2xl font-bold text-gray-900">
               {editingPostId ? "Edit Post" : "Create Post"}
@@ -270,7 +329,6 @@ const CreatePost = () => {
                   rows={4}
                   className="w-full p-3 border border-gray-300 rounded-lg resize-none pr-12"
                 />
-                {/* Emoji icon inside textarea container */}
                 <button
                   type="button"
                   onClick={() => setEmojiPickerOpen((prev) => !prev)}
@@ -303,7 +361,7 @@ const CreatePost = () => {
                       type="button"
                       onClick={() => handleEmojiSelect(emoji)}
                       className="text-2xl hover:scale-125 transition"
-                      aria-label={'Select emoji ${emoji}'}
+                      aria-label={`Select emoji ${emoji}`}
                     >
                       {emoji}
                     </button>
@@ -311,11 +369,10 @@ const CreatePost = () => {
                 </div>
               )}
 
-              {/* Custom File Input */}
               <div className="mt-2">
                 <input
                   type="file"
-                  accept="image/,video/"
+                  accept="image/*,video/*"
                   onChange={handleFileChange}
                   ref={fileInputRef}
                   className="hidden"
@@ -342,25 +399,39 @@ const CreatePost = () => {
                   Media Picker
                 </label>
                 <span className="ml-3 text-gray-700">
-                  {newPost.mediaFile ? newPost.mediaFile.name : "No file selected"}
+                  {newPost.mediaFile?.name || (newPost.mediaURL ? "Existing Media" : "No file selected")}
                 </span>
+                {(newPost.mediaFile || newPost.mediaURL) && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setNewPost(prev => ({ ...prev, mediaFile: null, mediaURL: "", mediaType: "" }));
+                      if (fileInputRef.current) fileInputRef.current.value = "";
+                    }}
+                    className="ml-3 text-red-500 hover:text-red-700 text-sm"
+                  >
+                    Clear Media
+                  </button>
+                )}
               </div>
 
-              {/* Preview of selected media */}
               {newPost.mediaURL && (
                 <div className="mt-4">
                   {newPost.mediaType === "image" ? (
                     <img
                       src={newPost.mediaURL}
                       alt="Preview"
-                      className="max-h-60 rounded object-contain"
+                      className="max-h-60 rounded object-contain w-full"
                     />
                   ) : (
                     <video
                       controls
                       className="max-h-60 rounded w-full"
                       src={newPost.mediaURL}
-                    />
+                      type="video/mp4"
+                    >
+                      Your browser does not support the video tag.
+                    </video>
                   )}
                 </div>
               )}
@@ -368,18 +439,7 @@ const CreatePost = () => {
               <div className="flex justify-end gap-4 mt-6">
                 <button
                   type="button"
-                  onClick={() => {
-                    setModalOpen(false);
-                    setEditingPostId(null);
-                    setNewPost({
-                      title: "",
-                      description: "",
-                      mediaFile: null,
-                      mediaURL: "",
-                      mediaType: "",
-                    });
-                    setMentionSuggestions([]);
-                  }}
+                  onClick={closeModalAndReset}
                   className="bg-gray-400 px-5 py-2 rounded shadow hover:bg-gray-500 transition"
                 >
                   Cancel
@@ -436,10 +496,11 @@ const CreatePost = () => {
             {selectedPost.mediaURL && selectedPost.mediaType === "video" && (
               <video controls className="rounded mb-4 max-h-96 w-full">
                 <source src={selectedPost.mediaURL} type="video/mp4" />
+                Your browser does not support the video tag.
               </video>
             )}
             <button
-              className="bg-indigo-600 text-white px-6 py-2 rounded shadow hover:bg-indigo-700"
+              className="bg-indigo-600 text-white px-6 py-3 rounded shadow hover:bg-indigo-700 transition"
               onClick={() => setDetailModalOpen(false)}
             >
               Close
