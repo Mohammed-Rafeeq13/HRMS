@@ -15,6 +15,7 @@ function App() {
   const [activeComponent, setActiveComponent] = useState("dashboard");
   const [user, setUser] = useState(null);
   const [authMode, setAuthMode] = useState("login"); // "login" or "register"
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const loadUser = async () => {
     try {
@@ -45,6 +46,15 @@ function App() {
   const handleLogout = () => {
     setUser(null);
     setActiveComponent("dashboard");
+    setIsMobileMenuOpen(false);
+  };
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
   };
 
   const renderComponent = () => {
@@ -66,6 +76,11 @@ function App() {
     }
   };
 
+  const handleComponentChange = (componentId) => {
+    setActiveComponent(componentId);
+    closeMobileMenu(); // Close mobile menu when navigating
+  };
+
   // Show login/register if user is not authenticated
   if (!user) {
     if (authMode === "login") {
@@ -83,19 +98,52 @@ function App() {
 
   // Show main app if user is authenticated
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50 relative">
+      {/* Mobile Menu Button */}
+      <button
+        onClick={toggleMobileMenu}
+        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
+        aria-label="Toggle menu"
+      >
+        <div className="w-6 h-6 flex flex-col justify-center items-center">
+          <span className={`block w-5 h-0.5 bg-gray-600 transition-all duration-300 ${isMobileMenuOpen ? 'rotate-45 translate-y-1' : '-translate-y-1'}`}></span>
+          <span className={`block w-5 h-0.5 bg-gray-600 transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0' : 'opacity-100'}`}></span>
+          <span className={`block w-5 h-0.5 bg-gray-600 transition-all duration-300 ${isMobileMenuOpen ? '-rotate-45 -translate-y-1' : 'translate-y-1'}`}></span>
+        </div>
+      </button>
+
+      {/* Mobile Overlay */}
+      {isMobileMenuOpen && (
+        <div
+          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity"
+          onClick={closeMobileMenu}
+        />
+      )}
+
       {/* Sidebar */}
-      <div className="flex-shrink-0 w-64 bg-white shadow-lg">
+      <div className={`
+        fixed lg:relative lg:translate-x-0
+        ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
+        transition-transform duration-300 ease-in-out
+        w-64 bg-white shadow-lg z-50 lg:z-auto
+        h-full lg:flex-shrink-0
+      `}>
         <Sidebar
           activeComponent={activeComponent}
-          setActiveComponent={setActiveComponent}
+          setActiveComponent={handleComponentChange}
           user={user}
           onLogout={handleLogout}
           setUser={setUser}
+          isMobile={true}
+          closeMobileMenu={closeMobileMenu}
         />
       </div>
+
       {/* Main Content */}
-      <div className="flex-1 overflow-auto bg-gray-50">{renderComponent()}</div>
+      <div className="flex-1 overflow-auto bg-gray-50 lg:ml-0">
+        <div className="lg:hidden h-16"></div> {/* Spacer for mobile menu button */}
+        {renderComponent()}
+      </div>
     </div>
   );
 }

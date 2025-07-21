@@ -49,12 +49,12 @@ const Register = ({ setAuthMode }) => {
     <div>
       <ToastContainer />
       <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+        <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-6 lg:p-8 mobile-margin">
+          <h2 className="text-xl lg:text-2xl font-bold text-gray-900 mb-6 text-center">
             Sign Up
           </h2>
 
-          <form className="space-y-4" onSubmit={handleSubmit}>
+          <form className="space-y-4 lg:space-y-6" onSubmit={handleSubmit}>
             <div className="flex items-center justify-center">
               <input
                 type="file"
@@ -75,24 +75,24 @@ const Register = ({ setAuthMode }) => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="form-label">
                 Name
               </label>
               <input
                 type="text"
                 name="name"
-                className="w-full text-black px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                className="form-input btn-touch"
                 placeholder="Pawan singh"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="form-label">
                 Contact
               </label>
               <input
                 type="tel"
                 name="contact"
-                className="w-full text-black px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                className="form-input btn-touch"
                 placeholder="+91 1234567890"
               />
             </div>

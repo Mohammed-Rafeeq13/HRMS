@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ToastContainer,toast } from "react-toastify";
 import axios from "axios";
 
-const Sidebar = ({ activeComponent, setActiveComponent, user, onLogout ,setUser }) => {
+const Sidebar = ({ activeComponent, setActiveComponent, user, onLogout, setUser, isMobile, closeMobileMenu }) => {
   const [hoveredItem, setHoveredItem] = useState(null);
   const [logoHovered, setLogoHovered] = useState(false);
 
@@ -58,42 +58,57 @@ const Sidebar = ({ activeComponent, setActiveComponent, user, onLogout ,setUser 
   return (
     <div className="w-64 bg-white h-full border-r border-gray-200 shadow-sm flex flex-col">
       {/* Header */}
-      <div className="p-6 border-b border-gray-100">
-        <div
-          className="flex items-center space-x-3 cursor-pointer group"
-          onMouseEnter={() => setLogoHovered(true)}
-          onMouseLeave={() => setLogoHovered(false)}
-        >
+      <div className="p-4 lg:p-6 border-b border-gray-100">
+        <div className="flex items-center justify-between">
           <div
-            className={`w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center transition-all duration-200 ${
-              logoHovered ? "scale-105 shadow-md" : ""
-            }`}
+            className="flex items-center space-x-3 cursor-pointer group"
+            onMouseEnter={() => setLogoHovered(true)}
+            onMouseLeave={() => setLogoHovered(false)}
           >
-            <span className="text-white font-bold text-lg">H</span>
-          </div>
-          <div>
-            <span
-              className={`text-xl font-semibold text-gray-800 transition-colors duration-200 ${
-                logoHovered ? "text-blue-600" : ""
+            <div
+              className={`w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center transition-all duration-200 ${
+                logoHovered ? "scale-105 shadow-md" : ""
               }`}
             >
-              HRMS
-            </span>
-            <p className="text-xs text-gray-500 uppercase tracking-wide">Human Resources</p>
+              <span className="text-white font-bold text-lg">H</span>
+            </div>
+            <div>
+              <span
+                className={`text-xl font-semibold text-gray-800 transition-colors duration-200 ${
+                  logoHovered ? "text-blue-600" : ""
+                }`}
+              >
+                HRMS
+              </span>
+              <p className="text-xs text-gray-500 uppercase tracking-wide">Human Resources</p>
+            </div>
           </div>
+
+          {/* Close button for mobile */}
+          {isMobile && (
+            <button
+              onClick={closeMobileMenu}
+              className="lg:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              aria-label="Close menu"
+            >
+              <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          )}
         </div>
       </div>
 
       {/* Navigation Menu */}
-      <nav className="flex-1 p-6">
-        <ul className="space-y-2">
+      <nav className="flex-1 p-4 lg:p-6">
+        <ul className="space-y-1 lg:space-y-2">
           {menuItems.map((item) => (
             <li key={item.id}>
               <button
                 onClick={() => setActiveComponent(item.id)}
                 onMouseEnter={() => setHoveredItem(item.id)}
                 onMouseLeave={() => setHoveredItem(null)}
-                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left transition-all duration-200 group ${
+                className={`w-full flex items-center space-x-3 px-3 lg:px-4 py-3 rounded-xl text-left transition-all duration-200 group ${
                   activeComponent === item.id
                     ? "bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-600 border-l-4 border-blue-600 shadow-sm"
                     : "text-gray-600 hover:bg-gray-50 hover:text-gray-800"
@@ -123,10 +138,10 @@ const Sidebar = ({ activeComponent, setActiveComponent, user, onLogout ,setUser 
       </nav>
 
       {/* Footer */}
-      <div className="p-6 border-t border-gray-100 mt-auto">
+      <div className="p-4 lg:p-6 border-t border-gray-100 mt-auto">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3 text-gray-500">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-lg flex items-center justify-center">
+          <div className="flex items-center space-x-3 text-gray-500 min-w-0 flex-1">
+            <div className="w-8 h-8 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
               {user?.image ? (
                 <img
                   src={user.image}
@@ -139,8 +154,8 @@ const Sidebar = ({ activeComponent, setActiveComponent, user, onLogout ,setUser 
                 </span>
               )}
             </div>
-            <div>
-              <p className="text-sm font-medium text-gray-700">
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-medium text-gray-700 truncate">
                 {user?.name || 'User'}
               </p>
               <p className="text-xs text-gray-500 uppercase tracking-wide">Administrator</p>
@@ -148,7 +163,7 @@ const Sidebar = ({ activeComponent, setActiveComponent, user, onLogout ,setUser 
           </div>
           <button
             onClick={()=>{handleSubmit()}}
-            className="w-8 h-8 bg-gray-100 hover:bg-red-100 rounded-lg flex items-center justify-center text-gray-600 hover:text-red-600 transition-colors"
+            className="w-8 h-8 bg-gray-100 hover:bg-red-100 rounded-lg flex items-center justify-center text-gray-600 hover:text-red-600 transition-colors flex-shrink-0 ml-2"
             title="Logout"
           >
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">

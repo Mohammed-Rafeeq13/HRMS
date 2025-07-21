@@ -137,20 +137,20 @@ const Posts = ({user}) => {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen py-6">
-      <div className="max-w-5xl mx-auto px-6 flex flex-col lg:flex-row gap-6">
-        <div className="lg:w-3/4 w-full space-y-6">
-          <div className="bg-white p-4 rounded shadow flex justify-between items-center">
-            <div>
-              <h2 className="text-2xl font-bold text-blue-800">Posts</h2>
-              <p className="text-base font-normal text-gray-600">
+    <div className="bg-gray-100 min-h-screen py-4 lg:py-6">
+      <div className="container-main flex flex-col lg:flex-row gap-4 lg:gap-6">
+        <div className="lg:w-3/4 w-full space-y-4 lg:space-y-6">
+          <div className="bg-white p-4 rounded shadow flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 sm:gap-0">
+            <div className="flex-1">
+              <h2 className="text-xl lg:text-2xl font-bold text-blue-800">Posts</h2>
+              <p className="text-sm lg:text-base font-normal text-gray-600">
                 Browse updates from your network ({posts.length} posts)
               </p>
             </div>
             <button
               onClick={handleRefresh}
               disabled={loading}
-              className={`px-4 py-2 rounded transition flex items-center gap-2 ${
+              className={`px-4 py-2 rounded transition flex items-center gap-2 btn-touch flex-shrink-0 ${
                 loading
                   ? 'bg-gray-400 cursor-not-allowed'
                   : 'bg-blue-600 hover:bg-blue-700'
@@ -189,22 +189,28 @@ const Posts = ({user}) => {
           )}
 
           {posts.map((post) => (
-            <div key={post._id} className="bg-white p-5 shadow rounded space-y-3">
+            <div key={post._id} className="bg-white p-4 lg:p-5 shadow rounded space-y-3 card">
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <img
-                    src="https://randomuser.me/api/portraits/men/32.jpg"
-                    alt="Avatar"
-                    className="w-10 h-10 rounded-full"
-                  />
-                  <div>
-                    <h4 className="font-semibold text-gray-800">{post.name}</h4>
-                    <p className="text-sm text-gray-500">{post.position}</p>
+                <div className="flex items-center space-x-3 min-w-0 flex-1">
+                  <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center text-blue-600 font-semibold text-sm flex-shrink-0">
+                    {user?.image ? (
+                      <img
+                        src={user.image}
+                        alt={user.name}
+                        className="w-full h-full object-cover rounded-full"
+                      />
+                    ) : (
+                      user?.name?.split(' ').map(n => n[0]).join('') || 'U'
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h4 className="font-semibold text-gray-800 truncate">{user?.name || 'User'}</h4>
+                    <p className="text-sm text-gray-500 truncate">{user?.role || 'Employee'}</p>
                   </div>
                 </div>
                 <button
                   onClick={() => toggleSave(post._id)}
-                  className="text-sm text-gray-600 hover:text-blue-600 transition"
+                  className="text-sm text-gray-600 hover:text-blue-600 transition btn-touch flex-shrink-0 ml-2"
                 >
                   {savedPosts[post._id] ? "💾 Saved" : "💾 Save"}
                 </button>
@@ -222,7 +228,7 @@ const Posts = ({user}) => {
                 <img
                   src={post.image}
                   alt="Post"
-                  className="w-full rounded-md object-cover max-h-64"
+                  className="w-full rounded-md object-cover max-h-48 lg:max-h-64"
                 />
               )}
 
@@ -230,10 +236,10 @@ const Posts = ({user}) => {
                 {post.views} views · {post.comments.length} comments · {post.shares} shares
               </p>
 
-              <div className="flex justify-between text-sm text-gray-600">
+              <div className="flex flex-wrap gap-2 lg:justify-between text-sm text-gray-600">
                 <button
                   onClick={() => handleLike(post._id)}
-                  className={`transition ${
+                  className={`transition btn-touch ${
                     post.liked ? "text-blue-600 font-semibold" : "hover:text-blue-600"
                   }`}
                 >
@@ -241,13 +247,13 @@ const Posts = ({user}) => {
                 </button>
                 <button
                   onClick={() => toggleComments(post._id)}
-                  className="hover:text-blue-600 transition"
+                  className="hover:text-blue-600 transition btn-touch"
                 >
                   💬 Comment ({post.comments.length})
                 </button>
                 <button
                   onClick={() => handleShare(post._id)}
-                  className="hover:text-blue-600 transition"
+                  className="hover:text-blue-600 transition btn-touch"
                 >
                   🔗 Share
                 </button>

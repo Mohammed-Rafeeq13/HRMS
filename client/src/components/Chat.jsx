@@ -15,6 +15,7 @@ const Chat = ({ user }) => {
   const [showCreateRoom, setShowCreateRoom] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [typingUsers, setTypingUsers] = useState([]);
+  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const messagesEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
 
@@ -217,6 +218,7 @@ const Chat = ({ user }) => {
   // Select chat function
   const selectChat = (type, chatUser = null, room = null) => {
     setSelectedChat({ type, user: chatUser, room });
+    setShowMobileSidebar(false); // Close mobile sidebar when selecting a chat
 
     if (type === 'private' && chatUser) {
       loadPrivateMessages(chatUser._id);
@@ -306,30 +308,71 @@ const Chat = ({ user }) => {
   };
 
   return (
-    <div className="flex h-[90vh] border border-gray-300 rounded-lg overflow-hidden bg-white shadow-lg">
+    <div className="flex h-[90vh] border border-gray-300 rounded-lg overflow-hidden bg-white shadow-lg relative">
+      {/* Mobile Chat Header */}
+      <div className="lg:hidden absolute top-0 left-0 right-0 z-30 bg-white border-b border-gray-200 p-3 flex items-center justify-between">
+        <button
+          onClick={() => setShowMobileSidebar(!showMobileSidebar)}
+          className="p-2 hover:bg-gray-100 rounded-lg transition-colors btn-touch"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <h2 className="text-lg font-semibold text-gray-800">
+          {selectedChat.type === 'global' ? 'Global Chat' :
+           selectedChat.type === 'private' ? selectedChat.user?.name :
+           selectedChat.room?.name}
+        </h2>
+        <div className="w-9"></div> {/* Spacer for centering */}
+      </div>
+
+      {/* Mobile Overlay */}
+      {showMobileSidebar && (
+        <div
+          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+          onClick={() => setShowMobileSidebar(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <div className="w-[320px] border-r border-gray-200 bg-gray-50 flex flex-col">
+      <div className={`
+        ${showMobileSidebar ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        fixed lg:relative lg:flex
+        w-[280px] lg:w-[320px] h-full
+        border-r border-gray-200 bg-gray-50
+        flex flex-col z-50 lg:z-auto
+        transition-transform duration-300 ease-in-out
+      `}>
         {/* Header */}
-        <div className="p-4 border-b border-gray-200 bg-white">
-          <h2 className="text-xl font-semibold text-gray-800">Chat</h2>
+        <div className="p-3 lg:p-4 border-b border-gray-200 bg-white flex-shrink-0 flex items-center justify-between">
+          <h2 className="text-lg lg:text-xl font-semibold text-gray-800">Chat</h2>
+          <button
+            onClick={() => setShowMobileSidebar(false)}
+            className="lg:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
 
         {/* Global Chat */}
-        <div className="p-3">
+        <div className="p-2 lg:p-3">
           <div
-            className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all ${
+            className={`flex items-center gap-3 p-2 lg:p-3 rounded-lg cursor-pointer transition-all btn-touch ${
               selectedChat.type === 'global'
                 ? 'bg-cyan-500 text-white'
                 : 'hover:bg-gray-200 text-gray-700'
             }`}
             onClick={() => selectChat('global')}
           >
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white font-semibold">
+            <div className="w-8 lg:w-10 h-8 lg:h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white font-semibold flex-shrink-0">
               🌐
             </div>
-            <div className="flex-1">
-              <p className="font-medium">Global Chat</p>
-              <p className="text-sm opacity-75">Everyone can see</p>
+            <div className="flex-1 min-w-0">
+              <p className="font-medium truncate">Global Chat</p>
+              <p className="text-sm opacity-75 truncate">Everyone can see</p>
             </div>
           </div>
         </div>
@@ -410,18 +453,18 @@ const Chat = ({ user }) => {
       </div>
 
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col">
-        {/* Chat Header */}
-        <div className="p-4 border-b border-gray-200 bg-white">
+      <div className="flex-1 flex flex-col min-h-0 pt-16 lg:pt-0">
+        {/* Chat Header - Hidden on mobile */}
+        <div className="hidden lg:block p-3 lg:p-4 border-b border-gray-200 bg-white flex-shrink-0">
           <div className="flex items-center gap-3">
             {selectedChat.type === 'global' && (
               <>
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white font-semibold">
+                <div className="w-8 lg:w-10 h-8 lg:h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white font-semibold flex-shrink-0">
                   🌐
                 </div>
-                <div>
-                  <h3 className="font-semibold text-lg text-gray-800">Global Chat</h3>
-                  <p className="text-sm text-gray-500">Everyone can see these messages</p>
+                <div className="min-w-0 flex-1">
+                  <h3 className="font-semibold text-base lg:text-lg text-gray-800 truncate">Global Chat</h3>
+                  <p className="text-sm text-gray-500 truncate">Everyone can see these messages</p>
                 </div>
               </>
             )}
@@ -523,20 +566,20 @@ const Chat = ({ user }) => {
         </div>
 
         {/* Message Input */}
-        <div className="p-4 border-t border-gray-200 bg-white">
-          <div className="flex items-center gap-3">
+        <div className="p-3 lg:p-4 border-t border-gray-200 bg-white flex-shrink-0">
+          <div className="flex items-center gap-2 lg:gap-3">
             <input
               type="text"
               placeholder="Type a message..."
               value={newMessage}
               onChange={(e) => handleTyping(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+              className="flex-1 px-3 lg:px-4 py-2 lg:py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent btn-touch text-sm lg:text-base"
             />
             <button
               onClick={sendMessage}
               disabled={!newMessage.trim()}
-              className="px-6 py-2 bg-cyan-500 text-white rounded-full hover:bg-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-4 lg:px-6 py-2 bg-cyan-500 text-white rounded-full hover:bg-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors btn-touch text-sm lg:text-base flex-shrink-0"
             >
               Send
             </button>

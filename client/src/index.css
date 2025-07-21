@@ -325,21 +325,206 @@
 }
 
 /* Enhanced Responsive Utilities */
-@media (max-width: 640px) {
+
+/* Mobile First Breakpoints */
+/* xs: 0px - 479px (mobile phones) */
+/* sm: 480px - 639px (large mobile phones) */
+/* md: 640px - 767px (tablets) */
+/* lg: 768px - 1023px (small laptops) */
+/* xl: 1024px - 1279px (laptops) */
+/* 2xl: 1280px+ (desktops) */
+
+/* Base mobile styles (xs) */
+.container-main {
+  padding: 0 1rem;
+  max-width: 100%;
+}
+
+.container-section {
+  padding: 0 0.75rem;
+  max-width: 100%;
+}
+
+/* Mobile-specific utilities */
+.mobile-padding {
+  padding: 1rem;
+}
+
+.mobile-margin {
+  margin: 1rem;
+}
+
+.mobile-text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.mobile-text-base {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.mobile-text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+/* Touch-friendly button sizes */
+.btn-touch {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.75rem 1rem;
+}
+
+.btn-touch-large {
+  min-height: 48px;
+  min-width: 48px;
+  padding: 1rem 1.5rem;
+}
+
+/* Mobile grid utilities */
+.mobile-grid-1 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.mobile-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+/* Mobile flexbox utilities */
+.mobile-flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.mobile-items-stretch {
+  align-items: stretch;
+}
+
+/* Mobile spacing */
+.mobile-space-y-2 > * + * {
+  margin-top: 0.5rem;
+}
+
+.mobile-space-y-4 > * + * {
+  margin-top: 1rem;
+}
+
+.mobile-space-x-2 > * + * {
+  margin-left: 0.5rem;
+}
+
+.mobile-space-x-4 > * + * {
+  margin-left: 1rem;
+}
+
+/* Small mobile phones (xs: up to 479px) */
+@media (max-width: 479px) {
+  .text-display-1 {
+    font-size: 2rem;
+    line-height: 1.1;
+  }
+
+  .text-display-2 {
+    font-size: 1.75rem;
+    line-height: 1.1;
+  }
+
+  .text-heading-1 {
+    font-size: 1.75rem;
+    line-height: 2rem;
+  }
+
+  .text-heading-2 {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  .container-main {
+    padding: 0 0.75rem;
+  }
+
+  .padding-section {
+    padding: 1rem;
+  }
+
+  .card-body {
+    padding: 1rem;
+  }
+
+  .btn-primary, .btn-secondary {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Large mobile phones (sm: 480px - 639px) */
+@media (min-width: 480px) and (max-width: 639px) {
   .container-main {
     padding: 0 1rem;
   }
 
-  .padding-section {
-    padding: 1.5rem;
-  }
-
   .text-display-1 {
-    font-size: 2.5rem;
+    font-size: 2.25rem;
   }
 
   .text-display-2 {
-    font-size: 2rem;
+    font-size: 1.875rem;
+  }
+}
+
+/* Tablets (md: 640px - 767px) */
+@media (min-width: 640px) and (max-width: 767px) {
+  .container-main {
+    padding: 0 1.5rem;
+    max-width: 640px;
+  }
+
+  .container-section {
+    max-width: 576px;
+  }
+}
+
+/* Small laptops (lg: 768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .container-main {
+    padding: 0 2rem;
+    max-width: 768px;
+  }
+
+  .container-section {
+    max-width: 704px;
+  }
+}
+
+/* Laptops (xl: 1024px - 1279px) */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .container-main {
+    max-width: 1024px;
+  }
+
+  .container-section {
+    max-width: 896px;
+  }
+}
+
+/* Desktops (2xl: 1280px+) */
+@media (min-width: 1280px) {
+  .container-main {
+    max-width: 1280px;
+  }
+
+  .container-section {
+    max-width: 1024px;
   }
 }
 
@@ -379,4 +564,140 @@
 .status-info {
   background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-indigo) 100%);
   color: white;
+}
+
+/* Mobile-specific form styles */
+@media (max-width: 767px) {
+  .form-input {
+    padding: 1rem;
+    font-size: 1rem;
+    min-height: 44px;
+  }
+
+  .form-label {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Mobile-friendly modals */
+  .modal-mobile {
+    margin: 1rem;
+    max-height: calc(100vh - 2rem);
+    border-radius: var(--border-radius-lg);
+  }
+
+  /* Mobile card adjustments */
+  .card {
+    border-radius: var(--border-radius-lg);
+    margin-bottom: 1rem;
+  }
+
+  .card-header {
+    padding: 1rem 1rem 0 1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .card-body {
+    padding: 1rem;
+  }
+
+  .card-footer {
+    padding: 0 1rem 1rem 1rem;
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+  }
+
+  /* Mobile navigation improvements */
+  .mobile-nav-item {
+    padding: 1rem;
+    border-bottom: 1px solid var(--gray-100);
+  }
+
+  .mobile-nav-item:last-child {
+    border-bottom: none;
+  }
+
+  /* Mobile table responsiveness */
+  .table-mobile {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .table-mobile th,
+  .table-mobile td {
+    min-width: 120px;
+    padding: 0.75rem 0.5rem;
+  }
+}
+
+/* Tablet-specific adjustments */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .container-main {
+    padding: 0 1.5rem;
+  }
+
+  .card-body {
+    padding: 1.25rem;
+  }
+
+  .btn-primary, .btn-secondary {
+    padding: 0.875rem 1.25rem;
+  }
+}
+
+/* Hide/show utilities for different screen sizes */
+.hide-mobile {
+  display: block;
+}
+
+.show-mobile {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .hide-mobile {
+    display: none;
+  }
+
+  .show-mobile {
+    display: block;
+  }
+}
+
+.hide-tablet {
+  display: block;
+}
+
+.show-tablet {
+  display: none;
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .hide-tablet {
+    display: none;
+  }
+
+  .show-tablet {
+    display: block;
+  }
+}
+
+.hide-desktop {
+  display: block;
+}
+
+.show-desktop {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .hide-desktop {
+    display: none;
+  }
+
+  .show-desktop {
+    display: block;
+  }
 }

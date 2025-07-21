@@ -162,24 +162,24 @@ const Dashboard = ({ user, onLogout }) => {
     <div className="flex-1 bg-gray-50 min-h-screen">
       <div className="container-main py-4">
         {/* Header */}
-        <div className="flex justify-between items-start mb-6 animate-fade-in">
-          <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
+        <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start mb-6 animate-fade-in space-y-4 lg:space-y-0">
+          <div className="flex-1">
+            <h1 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
               Dashboard
             </h1>
-            <p className="text-gray-600 mt-1">
+            <p className="text-gray-600 mt-1 text-sm lg:text-base">
               Welcome {user?.name || 'User'}! Here what's happening today.
             </p>
           </div>
 
-          <div className="flex items-center space-x-3">
-            <div className="relative" ref={searchRef}>
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3">
+            <div className="relative flex-1 sm:flex-none" ref={searchRef}>
               <input
                 type="text"
                 placeholder="Search employees..."
                 value={searchTerm}
                 onChange={(e) => handleSearch(e.target.value)}
-                className="w-64 px-3 py-2 pl-10 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-sm"
+                className="w-full sm:w-64 px-3 py-2 pl-10 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-sm btn-touch"
               />
               <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -193,29 +193,29 @@ const Dashboard = ({ user, onLogout }) => {
 
               {/* Search Results Dropdown */}
               {showSearchResults && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-xl z-50 max-h-60 overflow-y-auto animate-slide-up">
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-xl z-50 max-h-60 overflow-y-auto animate-slide-up modal-mobile">
                   {filteredEmployees.length > 0 ? (
                     filteredEmployees.map((employee) => (
                       <div
                         key={employee.id}
-                        className="padding-element hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0 hover-lift transition-all"
+                        className="padding-element hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0 hover-lift transition-all mobile-nav-item"
                         onClick={() => {
                           setSearchTerm(employee.name);
                           setShowSearchResults(false);
                         }}
                       >
                         <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-xl flex items-center justify-center text-blue-600 font-semibold text-sm">
+                          <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-xl flex items-center justify-center text-blue-600 font-semibold text-sm flex-shrink-0">
                             {employee.name
                               .split(" ")
                               .map((n) => n[0])
                               .join("")}
                           </div>
-                          <div>
-                            <p className="text-body-small font-semibold text-gray-900">
+                          <div className="min-w-0 flex-1">
+                            <p className="text-body-small font-semibold text-gray-900 truncate">
                               {employee.name}
                             </p>
-                            <p className="text-caption text-gray-500">
+                            <p className="text-caption text-gray-500 truncate">
                               {employee.role} • {employee.department}
                             </p>
                           </div>
@@ -231,10 +231,10 @@ const Dashboard = ({ user, onLogout }) => {
               )}
             </div>
 
-            <div className="relative">
+            <div className="relative flex-shrink-0">
               <button
                 onClick={handleNotificationClick}
-                className="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-gray-600 hover:bg-gray-50 transition-all shadow-sm border border-gray-200"
+                className="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-gray-600 hover:bg-gray-50 transition-all shadow-sm border border-gray-200 btn-touch"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
@@ -248,10 +248,10 @@ const Dashboard = ({ user, onLogout }) => {
             </div>
 
             <div
-              className="flex items-center space-x-2 cursor-pointer hover:bg-white rounded-lg px-2 py-1 transition-all shadow-sm border border-gray-200"
+              className="flex items-center space-x-2 cursor-pointer hover:bg-white rounded-lg px-2 py-1 transition-all shadow-sm border border-gray-200 btn-touch flex-shrink-0"
               onClick={handleUserProfileClick}
             >
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-sm overflow-hidden">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-sm overflow-hidden flex-shrink-0">
                 {user?.image ? (
                   <img
                     src={user.image}
@@ -262,8 +262,8 @@ const Dashboard = ({ user, onLogout }) => {
                   user?.name?.split(' ').map(n => n[0]).join('') || 'U'
                 )}
               </div>
-              <div>
-                <p className="text-sm font-semibold text-gray-900">{user?.name || 'User'}</p>
+              <div className="hidden sm:block min-w-0">
+                <p className="text-sm font-semibold text-gray-900 truncate">{user?.name || 'User'}</p>
                 <p className="text-xs text-gray-500">Administrator</p>
               </div>
             </div>
@@ -271,7 +271,7 @@ const Dashboard = ({ user, onLogout }) => {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 animate-fade-in">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6 animate-fade-in">
           {/* User Activities */}
           <div className="card hover-lift animate-slide-up">
             <div className="card-body">
@@ -428,15 +428,15 @@ const Dashboard = ({ user, onLogout }) => {
 
         {/* User Profile Dialog */}
         {showUserDialog && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          {/* Background Overlay with 60% opacity */}
+        <div className="fixed inset-0 z-50 flex items-center justify-center animate-fade-in">
+          {/* Background Overlay with blur effect */}
           <div
-            className="absolute inset-0 bg-black bg-opacity-60"
+            className="absolute inset-0 bg-black bg-opacity-60 backdrop-blur-sm"
             onClick={closeDialog}
           ></div>
 
           {/* Dialog Content */}
-          <div className="relative bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 transform transition-all">
+          <div className="relative bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 transform transition-all animate-scale-in modal-mobile">
             {/* Dialog Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
               <h3 className="text-lg font-semibold text-gray-900">
