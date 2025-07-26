@@ -363,16 +363,15 @@ const Events = () => {
 
     return (
       <div
-        className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl"
-        style={{ padding: "24px" }}
+        className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-4 sm:p-6"
       >
         {/* Calendar Header */}
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-4 sm:mb-6">
           <button
             onClick={prevMonth}
-            className="p-3 hover:bg-white hover:shadow-md rounded-xl transition-all duration-200 text-gray-600 hover:text-blue-600"
+            className="p-2 sm:p-3 hover:bg-white hover:shadow-md rounded-xl transition-all duration-200 text-gray-600 hover:text-blue-600"
           >
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 20 20">
               <path
                 fillRule="evenodd"
                 d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
@@ -380,15 +379,15 @@ const Events = () => {
               />
             </svg>
           </button>
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+          <h2 className="text-lg sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent text-center">
             {currentDate.toLocaleString("default", { month: "long" })}{" "}
             {currentDate.getFullYear()}
           </h2>
           <button
             onClick={nextMonth}
-            className="p-3 hover:bg-white hover:shadow-md rounded-xl transition-all duration-200 text-gray-600 hover:text-blue-600"
+            className="p-2 sm:p-3 hover:bg-white hover:shadow-md rounded-xl transition-all duration-200 text-gray-600 hover:text-blue-600"
           >
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 20 20">
               <path
                 fillRule="evenodd"
                 d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
@@ -399,12 +398,12 @@ const Events = () => {
         </div>
 
         {/* Day Headers */}
-        <div className="grid grid-cols-7 gap-2 mb-4">
+        <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-3 sm:mb-4">
           {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
             (day, index) => (
               <div
                 key={day}
-                className={`p-2 text-center text-sm font-semibold ${
+                className={`p-1 sm:p-2 text-center text-xs sm:text-sm font-semibold ${
                   index === 0 || index === 6 ? "text-red-500" : "text-gray-600"
                 }`}
               >
@@ -415,7 +414,7 @@ const Events = () => {
         </div>
 
         {/* Calendar Days */}
-        <div className="grid grid-cols-7 gap-2">
+        <div className="grid grid-cols-7 gap-1 sm:gap-2">
           {days.map((day, index) => {
             const isToday =
               day === today.getDate() &&
@@ -439,7 +438,7 @@ const Events = () => {
                     )
                   )
                 }
-                className={`h-10 w-10 flex items-center justify-center rounded-lg cursor-pointer transition-all duration-200 text-sm font-medium relative ${
+                className={`h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center rounded-lg cursor-pointer transition-all duration-200 text-xs sm:text-sm font-medium relative ${
                   day
                     ? isToday
                       ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg transform scale-110"
@@ -453,7 +452,7 @@ const Events = () => {
               >
                 {day || ""}
                 {hasEventOnDay && !isToday && (
-                  <div className="absolute bottom-0 right-0 w-2 h-2 bg-orange-400 rounded-full"></div>
+                  <div className="absolute bottom-0 right-0 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-orange-400 rounded-full"></div>
                 )}
               </div>
             );
@@ -461,7 +460,7 @@ const Events = () => {
         </div>
 
         {/* Legend */}
-        <div className="flex justify-center items-center space-x-6 mt-6 text-xs"></div>
+        <div className="flex justify-center items-center space-x-6 mt-4 sm:mt-6 text-xs"></div>
       </div>
     );
   };
@@ -471,21 +470,21 @@ const Events = () => {
       className="flex-1 bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen"
       style={{ marginLeft: "60px" }}
     >
-      <div className="max-w-6xl mx-auto px-6 py-8">
+      <div className="max-w-6xl mx-auto px-3 sm:px-6 py-4 sm:py-8">
         {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start mb-8 space-y-4 lg:space-y-0">
-          <div className="flex-1 pr-6">
+        <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start mb-6 sm:mb-8 space-y-4 lg:space-y-0">
+          <div className="flex-1 lg:pr-6">
             <h1
-              className="text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent"
+              className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent"
               style={{ marginBottom: "8px" }}
             >
               Company Events
             </h1>
-            <p className="text-gray-600 text-base leading-relaxed">
+            <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
               Manage and track all company events with ease
             </p>
           </div>
-          <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
             <button
               onClick={() => {
                 // Set current date when Create Event button is clicked
@@ -493,7 +492,7 @@ const Events = () => {
                 setNewEventDate(currentDate);
                 setShowCreateDialog(true);
               }}
-              className="w-full sm:w-auto bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:via-purple-700 hover:to-indigo-700 transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl font-semibold text-sm transform hover:scale-105"
+              className="w-full sm:w-auto bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg hover:from-blue-700 hover:via-purple-700 hover:to-indigo-700 transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl font-semibold text-sm transform hover:scale-105"
             >
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path
@@ -509,7 +508,7 @@ const Events = () => {
             >
               <button
                 onClick={() => setActiveTab("upcoming")}
-                className={`px-6 py-3 transition-all duration-300 font-semibold text-sm ${
+                className={`flex-1 sm:flex-none px-4 sm:px-6 py-2.5 sm:py-3 transition-all duration-300 font-semibold text-sm ${
                   activeTab === "upcoming"
                     ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md"
                     : "text-gray-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 hover:text-blue-600"
@@ -519,7 +518,7 @@ const Events = () => {
               </button>
               <button
                 onClick={() => setActiveTab("recent")}
-                className={`px-6 py-3 transition-all duration-300 font-semibold text-sm ${
+                className={`flex-1 sm:flex-none px-4 sm:px-6 py-2.5 sm:py-3 transition-all duration-300 font-semibold text-sm ${
                   activeTab === "recent"
                     ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md"
                     : "text-gray-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 hover:text-blue-600"
@@ -532,18 +531,18 @@ const Events = () => {
         </div>
 
         {/* Calendar */}
-        <div className="bg-white rounded-xl shadow-lg border border-gray-200 mb-8">
-          <div className="p-6">
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 space-y-2 sm:space-y-0 sm:space-x-4">
-              <h2 className="text-xl font-bold text-gray-900">
+        <div className="bg-white rounded-xl shadow-lg border border-gray-200 mb-6 sm:mb-8">
+          <div className="p-4 sm:p-6">
+            <div className="flex flex-col space-y-4 mb-6">
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900">
                 Event Calendar
               </h2>
               {/* Calendar Filters */}
-              <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
+              <div className="flex flex-col space-y-3">
                 <select
                   value={calendarFilter}
                   onChange={(e) => setCalendarFilter(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-700 text-sm transition-all duration-200"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-700 text-sm transition-all duration-200"
                 >
                   <option value="all">All Events</option>
                   <option value="Company Meeting">Company Meetings</option>
@@ -555,16 +554,16 @@ const Events = () => {
                 </select>
 
                 {/* Date Range Filter */}
-                <div className="flex items-center space-x-2">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
                   <input
                     type="date"
-                    className="px-2 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-700 text-sm transition-all duration-200"
+                    className="flex-1 px-2 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-700 text-sm transition-all duration-200"
                     placeholder="From Date"
                   />
-                  <span className="text-gray-500 text-sm">to</span>
+                  <span className="text-gray-500 text-sm text-center sm:text-left">to</span>
                   <input
                     type="date"
-                    className="px-2 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-700 text-sm transition-all duration-200"
+                    className="flex-1 px-2 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-700 text-sm transition-all duration-200"
                     placeholder="To Date"
                   />
                 </div>
@@ -575,18 +574,18 @@ const Events = () => {
         </div>
 
         {/* Events Display */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           {activeTab === "upcoming" && (
             <>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-gray-900">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 space-y-2 sm:space-y-0">
+                <h2 className="text-lg sm:text-xl font-bold text-gray-900">
                   Upcoming Events
                 </h2>
-                <span className="text-xs text-gray-500 bg-gradient-to-r from-blue-100 to-indigo-100 px-3 py-1 rounded-full font-medium">
+                <span className="text-xs text-gray-500 bg-gradient-to-r from-blue-100 to-indigo-100 px-3 py-1 rounded-full font-medium self-start sm:self-auto">
                   {upcomingEvents.length} events scheduled
                 </span>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                 {upcomingEvents.map((event) => (
                   <div
                     key={event.id}
@@ -596,12 +595,12 @@ const Events = () => {
                     <img
                       src={event.image}
                       alt={event.title}
-                      className="w-full h-32 object-cover"
+                      className="w-full h-32 sm:h-36 object-cover"
                     />
-                    <div className="p-4">
-                      <div className="flex items-center justify-between mb-2">
+                    <div className="p-3 sm:p-4">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2 space-y-1 sm:space-y-0">
                         <span
-                          className={`px-2 py-1 rounded-full text-xs font-semibold text-white ${getCategoryColor(
+                          className={`px-2 py-1 rounded-full text-xs font-semibold text-white self-start ${getCategoryColor(
                             event.category
                           )}`}
                         >
@@ -611,13 +610,13 @@ const Events = () => {
                           {event.date}
                         </span>
                       </div>
-                      <h3 className="text-lg font-bold text-gray-900 mb-2">
+                      <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
                         {event.title}
                       </h3>
                       <p className="text-gray-600 mb-3 line-clamp-2 text-sm">
                         {event.description}
                       </p>
-                      <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between text-xs text-gray-500 mb-3 space-y-1 sm:space-y-0">
                         <div className="flex items-center space-x-1">
                           <svg
                             className="w-3 h-3"
@@ -630,7 +629,7 @@ const Events = () => {
                               clipRule="evenodd"
                             />
                           </svg>
-                          <span>{event.location}</span>
+                          <span className="truncate">{event.location}</span>
                         </div>
                         <div className="flex items-center space-x-1">
                           <svg
@@ -643,7 +642,7 @@ const Events = () => {
                           <span>{event.attendees} attending</span>
                         </div>
                       </div>
-                      <div className="flex space-x-2">
+                      <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -678,15 +677,15 @@ const Events = () => {
 
           {activeTab === "recent" && (
             <>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-gray-900">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 space-y-2 sm:space-y-0">
+                <h2 className="text-lg sm:text-xl font-bold text-gray-900">
                   Recent Events
                 </h2>
-                <span className="text-xs text-gray-500 bg-gradient-to-r from-gray-100 to-gray-200 px-3 py-1 rounded-full font-medium">
+                <span className="text-xs text-gray-500 bg-gradient-to-r from-gray-100 to-gray-200 px-3 py-1 rounded-full font-medium self-start sm:self-auto">
                   {recentEvents.length} past events
                 </span>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                 {recentEvents.map((event) => (
                   <div
                     key={event.id}
@@ -696,12 +695,12 @@ const Events = () => {
                     <img
                       src={event.image}
                       alt={event.title}
-                      className="w-full h-32 object-cover"
+                      className="w-full h-32 sm:h-36 object-cover"
                     />
-                    <div className="p-4">
-                      <div className="flex items-center justify-between mb-2">
+                    <div className="p-3 sm:p-4">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2 space-y-1 sm:space-y-0">
                         <span
-                          className={`px-2 py-1 rounded-full text-xs font-semibold text-white ${getCategoryColor(
+                          className={`px-2 py-1 rounded-full text-xs font-semibold text-white self-start ${getCategoryColor(
                             event.category
                           )}`}
                         >
@@ -711,13 +710,13 @@ const Events = () => {
                           {event.date}
                         </span>
                       </div>
-                      <h3 className="text-lg font-bold text-gray-900 mb-2">
+                      <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
                         {event.title}
                       </h3>
                       <p className="text-gray-600 mb-3 line-clamp-2 text-sm">
                         {event.description}
                       </p>
-                      <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between text-xs text-gray-500 mb-3 space-y-1 sm:space-y-0">
                         <div className="flex items-center space-x-1">
                           <svg
                             className="w-3 h-3"
@@ -730,7 +729,7 @@ const Events = () => {
                               clipRule="evenodd"
                             />
                           </svg>
-                          <span>{event.location}</span>
+                          <span className="truncate">{event.location}</span>
                         </div>
                         <div className="flex items-center space-x-1">
                           <svg
@@ -756,7 +755,7 @@ const Events = () => {
 
         {/* Event Detail Dialog */}
         {selectedEvent && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4">
             {/* Background Overlay */}
             <div
               className="absolute inset-0"
@@ -769,7 +768,7 @@ const Events = () => {
 
             {/* Dialog Content with Scroll */}
             <div
-              className="relative rounded-xl shadow-2xl max-w-3xl w-full mx-4 max-h-[90vh] z-10 overflow-hidden"
+              className="relative rounded-xl shadow-2xl max-w-3xl w-full mx-2 sm:mx-4 max-h-[95vh] sm:max-h-[90vh] z-10 overflow-hidden"
               style={{
                 background: "rgba(255, 255, 255, 0.95)",
                 backdropFilter: "blur(20px)",
@@ -781,11 +780,11 @@ const Events = () => {
                 <img
                   src={selectedEvent.image}
                   alt={selectedEvent.title}
-                  className="w-full h-48 object-cover rounded-t-xl"
+                  className="w-full h-40 sm:h-48 object-cover rounded-t-xl"
                 />
                 <button
                   onClick={closeDialog}
-                  className="absolute top-3 right-3 w-8 h-8 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-110 z-20"
+                  className="absolute top-2 sm:top-3 right-2 sm:right-3 w-8 h-8 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-110 z-20"
                 >
                   <svg
                     className="w-4 h-4"
@@ -799,9 +798,9 @@ const Events = () => {
                     />
                   </svg>
                 </button>
-                <div className="absolute bottom-3 left-3">
+                <div className="absolute bottom-2 sm:bottom-3 left-2 sm:left-3">
                   <span
-                    className={`px-3 py-1 rounded-full text-xs font-semibold text-white shadow-lg ${getCategoryColor(
+                    className={`px-2 sm:px-3 py-1 rounded-full text-xs font-semibold text-white shadow-lg ${getCategoryColor(
                       selectedEvent.category
                     )}`}
                   >
@@ -812,14 +811,13 @@ const Events = () => {
 
               {/* Dialog Body with Scroll */}
               <div
-                className="overflow-y-auto"
+                className="overflow-y-auto p-4 sm:p-5"
                 style={{
-                  padding: "20px",
                   background: "rgba(255, 255, 255, 0.95)",
-                  maxHeight: "calc(90vh - 200px)",
+                  maxHeight: "calc(95vh - 180px)",
                 }}
               >
-                <h3 className="text-xl font-bold text-gray-800 mb-3">
+                <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-3">
                   {selectedEvent.title}
                 </h3>
 
@@ -837,7 +835,7 @@ const Events = () => {
                 </p>
 
                 {/* Event Details */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                   <div className="space-y-4">
                     <div className="flex items-center space-x-3">
                       <div className="w-8 h-8 bg-gradient-to-r from-blue-100 to-blue-200 rounded-lg flex items-center justify-center">
@@ -941,10 +939,10 @@ const Events = () => {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+                <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3 pt-4 border-t border-gray-200">
                   <button
                     onClick={closeDialog}
-                    className="px-6 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg font-semibold text-sm transition-all duration-200 hover:scale-105"
+                    className="w-full sm:w-auto px-6 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg font-semibold text-sm transition-all duration-200 hover:scale-105"
                   >
                     Close
                   </button>
@@ -958,7 +956,7 @@ const Events = () => {
                         handleDeleteEvent(selectedEvent.id);
                       }
                     }}
-                    className="px-6 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold text-sm transition-all duration-200 hover:scale-105"
+                    className="w-full sm:w-auto px-6 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold text-sm transition-all duration-200 hover:scale-105"
                   >
                     Delete
                   </button>
@@ -970,7 +968,7 @@ const Events = () => {
 
         {/* Create Event Dialog */}
         {showCreateDialog && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4">
             {/* Background Overlay */}
             <div
               className="absolute inset-0"
@@ -983,7 +981,7 @@ const Events = () => {
 
             {/* Dialog Content with Scroll */}
             <div
-              className="relative rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] z-10 overflow-hidden"
+              className="relative rounded-xl shadow-2xl max-w-2xl w-full mx-2 sm:mx-4 max-h-[95vh] sm:max-h-[90vh] z-10 overflow-hidden"
               style={{
                 background: "rgba(255, 255, 255, 0.95)",
                 backdropFilter: "blur(20px)",
@@ -992,10 +990,10 @@ const Events = () => {
             >
               {/* Dialog Header */}
               <div
-                className="flex items-center justify-between border-b border-gray-200 bg-white rounded-t-xl p-6"
+                className="flex items-center justify-between border-b border-gray-200 bg-white rounded-t-xl p-4 sm:p-6"
               >
-                <div>
-                  <h3 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-1">
+                <div className="flex-1 pr-4">
+                  <h3 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-1">
                     Create New Event
                   </h3>
                   <p className="text-gray-600 text-sm">
@@ -1004,7 +1002,7 @@ const Events = () => {
                 </div>
                 <button
                   onClick={closeDialog}
-                  className="w-8 h-8 bg-gray-500 hover:bg-gray-600 rounded-full flex items-center justify-center text-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-110"
+                  className="w-8 h-8 bg-gray-500 hover:bg-gray-600 rounded-full flex items-center justify-center text-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-110 flex-shrink-0"
                 >
                   <svg
                     className="w-4 h-4"
@@ -1022,9 +1020,9 @@ const Events = () => {
 
               {/* Dialog Body with Scroll */}
               <div
-                className="overflow-y-auto bg-white p-6 space-y-4"
+                className="overflow-y-auto bg-white p-4 sm:p-6 space-y-4"
                 style={{
-                  maxHeight: "calc(90vh - 160px)",
+                  maxHeight: "calc(95vh - 140px)",
                 }}
               >
                 <div>
@@ -1034,7 +1032,7 @@ const Events = () => {
                   <input
                     type="text"
                     placeholder="Enter event title"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-gray-700 text-sm shadow-sm"
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-gray-700 text-sm shadow-sm"
                     value={newEvent.title}
                     onChange={(e) =>
                       setNewEvent({ ...newEvent, title: e.target.value })
@@ -1042,13 +1040,13 @@ const Events = () => {
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Category
                     </label>
                     <select
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-gray-700 bg-white text-sm shadow-sm"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-gray-700 bg-white text-sm shadow-sm"
                       value={newEvent.category}
                       onChange={(e) =>
                         setNewEvent({ ...newEvent, category: e.target.value })
@@ -1069,7 +1067,7 @@ const Events = () => {
                     </label>
                     <input
                       type="time"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-gray-700 text-sm shadow-sm"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-gray-700 text-sm shadow-sm"
                       value={newEvent.time}
                       onChange={(e) =>
                         setNewEvent({ ...newEvent, time: e.target.value })
@@ -1085,7 +1083,7 @@ const Events = () => {
                   <input
                     type="text"
                     placeholder="Enter event location"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-gray-700 text-sm shadow-sm"
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-gray-700 text-sm shadow-sm"
                     value={newEvent.location}
                     onChange={(e) =>
                       setNewEvent({ ...newEvent, location: e.target.value })
@@ -1100,7 +1098,7 @@ const Events = () => {
                   <textarea
                     placeholder="Enter event description"
                     rows="3"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-gray-700 resize-none text-sm shadow-sm"
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-gray-700 resize-none text-sm shadow-sm"
                     value={newEvent.description}
                     onChange={(e) =>
                       setNewEvent({ ...newEvent, description: e.target.value })
@@ -1116,7 +1114,7 @@ const Events = () => {
                     <input
                       type="file"
                       accept="image/*"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-gray-700 text-sm shadow-sm file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-gradient-to-r file:from-blue-50 file:to-indigo-50 file:text-blue-700 hover:file:bg-gradient-to-r hover:file:from-blue-100 hover:file:to-indigo-100"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-gray-700 text-sm shadow-sm file:mr-2 sm:file:mr-3 file:py-1 file:px-2 sm:file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-gradient-to-r file:from-blue-50 file:to-indigo-50 file:text-blue-700 hover:file:bg-gradient-to-r hover:file:from-blue-100 hover:file:to-indigo-100"
                       onChange={(e) => {
                         const file = e.target.files[0];
                         if (file) {
@@ -1138,16 +1136,16 @@ const Events = () => {
               </div>
 
               {/* Dialog Footer */}
-              <div className="flex justify-end space-x-3 p-6 border-t border-gray-200 bg-white rounded-b-xl">
+              <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3 p-4 sm:p-6 border-t border-gray-200 bg-white rounded-b-xl">
                 <button
                   onClick={closeDialog}
-                  className="px-6 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg transition-all duration-300 font-semibold text-sm shadow-sm hover:shadow-md transform hover:scale-105"
+                  className="w-full sm:w-auto px-6 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg transition-all duration-300 font-semibold text-sm shadow-sm hover:shadow-md transform hover:scale-105"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleCreateEvent}
-                  className="px-6 py-2 text-white bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 hover:from-blue-700 hover:via-purple-700 hover:to-indigo-700 transition-all duration-300 font-semibold text-sm shadow-lg hover:shadow-xl transform hover:scale-105 rounded-lg"
+                  className="w-full sm:w-auto px-6 py-2 text-white bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 hover:from-blue-700 hover:via-purple-700 hover:to-indigo-700 transition-all duration-300 font-semibold text-sm shadow-lg hover:shadow-xl transform hover:scale-105 rounded-lg"
                 >
                   Save Event
                 </button>
